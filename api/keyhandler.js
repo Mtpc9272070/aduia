@@ -5,7 +5,7 @@ import dotenv from "dotenv";
 dotenv.config();
 const app = express();
 
-app.get("/api", async (req, res) => {
+app.get("/", async (req, res) => {
   const key = process.env.API_KEY;
 
   if (!key) {
@@ -15,7 +15,7 @@ app.get("/api", async (req, res) => {
   try {
     const response = await fetch("https://api.openai.com/v1/models", {
       headers: {
-        "Authorization": `Bearer ${key}`
+        Authorization: `Bearer ${key}`
       }
     });
 
@@ -23,10 +23,9 @@ app.get("/api", async (req, res) => {
     res.status(200).json({ message: "Conexión segura exitosa", data });
 
   } catch (err) {
-    res.status(500).json({ error: "Error al conectar con la API externa", details: err.message });
+    res.status(500).json({ error: "Error al conectar con la API", details: err.message });
   }
 });
 
-// Render necesita saber en qué puerto escuchar
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`Servidor corriendo en puerto ${PORT}`));
