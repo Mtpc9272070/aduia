@@ -1,15 +1,14 @@
 {
   "name": "aduia",
   "version": "1.0.0",
-  "description": "API segura para proteger y gestionar claves mediante funciones serverless en Vercel.",
   "main": "api/keyhandler.js",
+  "type": "module",
   "scripts": {
-    "dev": "vercel dev",
     "start": "node api/keyhandler.js"
   },
   "dependencies": {
-    "node-fetch": "^3.3.2"
-  },
-  "type": "module",
-  "license": "MIT"
+    "express": "^4.19.2",
+    "node-fetch": "^3.3.2",
+    "dotenv": "^16.4.1"
+  }
 }
