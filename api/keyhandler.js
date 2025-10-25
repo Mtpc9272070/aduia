@@ -23,7 +23,7 @@ app.post("/chat", async (req, res) => {
   }
 
   try {
-    const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+    const openai = new OpenAI({ apiKey: process.env.API_KEY });
 
     const completion = await openai.chat.completions.create({
       model: "gpt-3.5-turbo",
