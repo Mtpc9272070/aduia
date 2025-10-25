@@ -1,7 +1,7 @@
 import express from "express";
 import cors from "cors";
-import fetch from "node-fetch";
 import dotenv from "dotenv";
+import OpenAI from "openai";
 
 dotenv.config();
 
@@ -9,41 +9,33 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// Ruta para comprobar estado
+// Estado del servidor
 app.get("/status", (req, res) => {
-  res.json({ message: "✅ Servidor ADUIA en línea y operativo" });
+  res.json({ message: "✅ Servidor ADUIA funcionando correctamente" });
 });
 
-// Ruta del chat (usa tu API Key segura)
+// ChatGPT endpoint
 app.post("/chat", async (req, res) => {
-  const key = process.env.OPENAI_API_KEY;
-
-  if (!key) {
-    return res.status(500).json({ error: "Falta la API key en el servidor" });
-  }
-
   const { prompt } = req.body;
 
+  if (!process.env.OPENAI_API_KEY) {
+    return res.status(500).json({ error: "Falta la API Key de OpenAI" });
+  }
+
   try {
-    const response = await fetch("https://api.openai.com/v1/chat/completions", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${key}`
-      },
-      body: JSON.stringify({
-        model: "gpt-3.5-turbo",
-        messages: [{ role: "user", content: prompt }]
-      })
+    const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+
+    const completion = await openai.chat.completions.create({
+      model: "gpt-3.5-turbo",
+      messages: [{ role: "user", content: prompt }]
     });
 
-    const data = await response.json();
-    res.json(data);
+    res.json(completion);
   } catch (error) {
-    console.error("Error al conectar con OpenAI:", error);
-    res.status(500).json({ error: "Error interno del servidor" });
+    console.error("❌ Error al contactar OpenAI:", error);
+    res.status(500).json({ error: error.message || "Error interno del servidor" });
   }
 });
 
 const PORT = process.env.PORT || 10000;
-app.listen(PORT, () => console.log(`✅ Servidor ADUIA corriendo en el puerto ${PORT}`));
+app.listen(PORT, () => console.log(`✅ ADUIA corriendo en el puerto ${PORT}`));
