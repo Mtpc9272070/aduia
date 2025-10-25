@@ -18,7 +18,7 @@ app.get("/status", (req, res) => {
 app.post("/chat", async (req, res) => {
   const { prompt } = req.body;
 
-  if (!process.env.OPENAI_API_KEY) {
+  if (!process.env.API_KEY) {
     return res.status(500).json({ error: "Falta la API Key de OpenAI" });
   }
 
