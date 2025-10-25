@@ -1,6 +1,6 @@
 import express from "express";
 import cors from "cors";
-import fetch from "node-fetch"; // si usas Node 18+ puedes eliminar esta línea
+import fetch from "node-fetch";
 import dotenv from "dotenv";
 
 dotenv.config();
@@ -9,12 +9,12 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// Ruta principal: muestra estado del servidor
+// Ruta para comprobar estado
 app.get("/status", (req, res) => {
   res.json({ message: "✅ Servidor ADUIA en línea y operativo" });
 });
 
-// Ruta que usa la API key de OpenAI
+// Ruta del chat (usa tu API Key segura)
 app.post("/chat", async (req, res) => {
   const key = process.env.OPENAI_API_KEY;
 
@@ -45,8 +45,5 @@ app.post("/chat", async (req, res) => {
   }
 });
 
-// Render usa la variable PORT automáticamente
 const PORT = process.env.PORT || 10000;
-app.listen(PORT, () => {
-  console.log(`✅ Servidor corriendo en el puerto ${PORT}`);
-});
+app.listen(PORT, () => console.log(`✅ Servidor ADUIA corriendo en el puerto ${PORT}`));
