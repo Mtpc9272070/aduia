@@ -11,7 +11,7 @@ app.use(express.json());
 
 // Estado del servidor
 app.get("/status", (req, res) => {
-  res.json({ message: "✅ Servidor ADUIA funcionando correctamente" });
+  res.status(200).json({ message: "Servidor ADUIA operacional" });
 });
 
 // ChatGPT endpoint
