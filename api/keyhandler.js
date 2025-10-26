@@ -10,12 +10,14 @@ app.use(cors());
 app.use(express.json());
 
 // Estado del servidor
+
+// RUTA DE BIENVENIDA AÑADIDA PARA EVITAR "Cannot GET /"
 app.get("/", (req, res) => {
   res.status(200).json({ status: "OK", message: "ADUIA API is running. Use the /chat endpoint for interaction." });
 });
 
 // ChatGPT endpoint
-app.post("/chat", async (req, res) =>
+app.post("/chat", async (req, res) => {
   const { prompt } = req.body;
 
   if (!process.env.API_KEY) {
