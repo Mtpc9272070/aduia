@@ -17,7 +17,7 @@ app.get("/", (req, res) => {
 });
 
 // ChatGPT endpoint
-app.post("/chat", async (req, res) => {
+app.post("/", async (req, res) => {
   const { prompt } = req.body;
 
   if (!process.env.API_KEY) {
