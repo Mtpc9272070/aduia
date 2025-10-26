@@ -10,9 +10,6 @@ app.use(cors());
 app.use(express.json());
 
 // Estado del servidor
-app.get("/status", (req, res) => {
-  res.status(200).json({ message: "Servidor ADUIA operacional" });
-});
 
 // ChatGPT endpoint
 app.post("/chat", async (req, res) => {
