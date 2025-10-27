@@ -27,7 +27,7 @@ app.post("/image", async (req, res) => {
 
     // Llamada al modelo de generación de imágenes (DALL-E)
     const response = await openai.images.generate({
-      model: "dall-e-2", // Usa DALL-E 2 para 512x512, o DALL-E 3 para 1024x1024 o superior
+      model: "dall-e-3", // Usa DALL-E 2 para 512x512, o DALL-E 3 para 1024x1024 o superior
       prompt: prompt,
       n: 1, 
       size: "512x512",
