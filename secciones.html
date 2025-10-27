@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Adupost - Presentación de Secciones</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+    /* Importación de fuente (Poppins - similar a la del flyer) */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap');
+
+:root {
+    --adu-green: #38C754;
+    --adu-purple: #8B4EEF;
+    --adu-orange: #FFB347;
+    --text-dark: #1F1F1F;
+    --bg-light: #F9F9F9;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: var(--bg-light);
+    color: var(--text-dark);
+    margin: 0;
+    padding: 0;
+    line-height: 1.6;
+}
+
+/* --- Encabezado al estilo del Flyer --- */
+.adu-header {
+    background: linear-gradient(135deg, var(--adu-purple), #9E70FF);
+    color: white;
+    padding: 40px 20px;
+    text-align: center;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    position: relative;
+    overflow: hidden; /* Para contener las formas */
+}
+
+.header-main-text {
+    font-size: 3.5em;
+    font-weight: 800;
+    letter-spacing: -2px;
+    margin: 0;
+    text-shadow: 2px 2px 0 var(--adu-green); /* Efecto neón/3D */
+}
+
+.header-subtitle {
+    font-size: 1.2em;
+    font-weight: 600;
+    margin-top: 5px;
+    color: #E0E0E0;
+}
+
+/* --- Contenedor de Secciones --- */
+.sections-container {
+    max-width: 1000px;
+    margin: 40px auto;
+    padding: 0 20px;
+    display: grid;
+    gap: 30px;
+}
+
+@media (min-width: 768px) {
+    .sections-container {
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    }
+}
+
+/* --- Diseño de Cada Sección --- */
+.video-section {
+    background-color: white;
+    border-radius: 15px;
+    padding: 25px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border-top: 5px solid var(--adu-green); /* Toque de color */
+}
+
+.video-section:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+}
+
+.section-title {
+    font-size: 1.8em;
+    font-weight: 800;
+    margin-top: 0;
+    margin-bottom: 15px;
+    color: var(--adu-purple);
+}
+
+.section-description {
+    font-size: 0.95em;
+    color: #555;
+    margin-top: 15px;
+}
+
+/* --- Estilos del Video --- */
+.video-wrapper {
+    position: relative;
+    width: 100%;
+    padding-top: 56.25%; /* Relación de aspecto 16:9 */
+    border-radius: 8px;
+    overflow: hidden;
+    background-color: #000;
+}
+
+.video-wrapper video {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: none;
+    display: block;
+}
+
+/* Estilo para enfocar la sección al hacer scroll (efecto JS) */
+.video-section.is-in-view {
+    border-top-color: var(--adu-orange);
+    animation: pulseBorder 1.5s infinite alternate;
+}
+
+@keyframes pulseBorder {
+    from {
+        box-shadow: 0 0 0 0 rgba(255, 179, 71, 0.7);
+    }
+    to {
+        box-shadow: 0 0 10px 5px rgba(255, 179, 71, 0.4);
+    }
+}
+</style>
+</head>
+<body>
+
+    <header class="adu-header">
+        <h1 class="header-main-text">Adupost</h1>
+        <p class="header-subtitle">Descubre nuestras secciones clave</p>
+    </header>
+
+    <main class="sections-container">
+
+        <section class="video-section" data-section="foros">
+            <h2 class="section-title">Foros y Discusión 💬</h2>
+            <div class="video-wrapper">
+                <video id="video-foros" controls poster="3.jpg">
+                    <source src="adupost.mp4" type="video/mp4">
+                    Tu navegador no soporta el tag de video.
+                </video>
+            </div>
+            <p class="section-description">Crea tus posts, participa en debates y comparte tu experticia universitaria.</p>
+        </section>
+        
+        <section class="video-section" data-section="aprendizaje">
+            <h2 class="section-title">Aprendizaje y Consulta 💡</h2>
+            <div class="video-wrapper">
+                <video id="video-aprendizaje" controls poster="1.jpg">
+                    <source src="aduweb1.mp4" type="video/mp4">
+                    Tu navegador no soporta el tag de video.
+                </video>
+            </div>
+            <p class="section-description">Encuentra material útil e interesante para tus estudios y resuelve tus dudas.</p>
+        </section>
+
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+    const sections = document.querySelectorAll('.video-section');
+
+    // Opciones para el Intersection Observer
+    const options = {
+        root: null, // viewport
+        rootMargin: '0px',
+        threshold: 0.7 // Al menos el 70% de la sección debe estar visible
+    };
+
+    /**
+     * Callback que se ejecuta cuando una sección entra o sale del viewport.
+     * Detiene la reproducción de videos que ya no están en la vista.
+     */
+    const handleIntersection = (entries, observer) => {
+        entries.forEach(entry => {
+            const videoElement = entry.target.querySelector('video');
+
+            if (videoElement) {
+                if (entry.isIntersecting) {
+                    // La sección está visible (70% o más)
+                    entry.target.classList.add('is-in-view');
+                    // Opcional: auto-play si quieres que empiece solo al ser visible
+                    // videoElement.play(); 
+                } else {
+                    // La sección ya no está visible
+                    entry.target.classList.remove('is-in-view');
+                    // Pausar el video
+                    if (!videoElement.paused) {
+                        videoElement.pause();
+                    }
+                }
+            }
+        });
+    };
+
+    // Crear el observador
+    const observer = new IntersectionObserver(handleIntersection, options);
+
+    // Observar todas las secciones
+    sections.forEach(section => {
+        observer.observe(section);
+    });
+
+    console.log("Adupost Sections Page running successfully!");
+});
+    </script>
+</body>
+</html>
