@@ -30,7 +30,8 @@ app.post("/image", async (req, res) => {
       model: "dall-e-3", // Usa DALL-E 2 para 512x512, o DALL-E 3 para 1024x1024 o superior
       prompt: prompt,
       n: 1, 
-      size: "512x512",
+      size: "1024x1024",
+      quality: "standard",
       response_format: 'url'
     });
 
