@@ -44,24 +44,31 @@ app.post("/image", async (req, res) => {
   }
 });
 // ChatGPT endpoint
-app.post("/", async (req, res) => {
-  const { prompt } = req.body;
+app.post("/chat", async (req, res) => {
+  // CORRECCIÓN: Capturamos el body completo como payload
+  const payload = req.body; 
 
   if (!process.env.API_KEY) {
     return res.status(500).json({ error: "Falta la API Key de OpenAI" });
+  }
+  
+  // Validación básica
+  if (!payload || !payload.messages) {
+      return res.status(400).json({ error: "Payload no válido. Faltan mensajes." });
   }
 
   try {
     const openai = new OpenAI({ apiKey: process.env.API_KEY });
 
+    // ENVIAMOS EL PAYLOAD COMPLETO DIRECTAMENTE AL API DE OPENAI
     const completion = await openai.chat.completions.create({
-      model: "gpt-3.5-turbo",
-      messages: [{ role: "user", content: prompt }]
+      ...payload
     });
 
     res.json(completion);
   } catch (error) {
     console.error("❌ Error al contactar OpenAI:", error);
+    // Devolvemos el error de la IA con un código de estado de servidor 500
     res.status(500).json({ error: error.message || "Error interno del servidor" });
   }
 });
