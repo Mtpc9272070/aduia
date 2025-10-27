@@ -15,7 +15,33 @@ app.use(express.json());
 app.get("/", (req, res) => {
   res.status(200).json({ status: "OK", message: "ADUIA API is running. Use the /chat endpoint for interaction." });
 });
+app.post("/image", async (req, res) => {
+  const { prompt } = req.body;
 
+  if (!process.env.API_KEY) {
+    return res.status(500).json({ error: "Falta la API Key de OpenAI" });
+  }
+
+  try {
+    const openai = new OpenAI({ apiKey: process.env.API_KEY });
+
+    // Llamada al modelo de generación de imágenes (DALL-E)
+    const response = await openai.images.generate({
+      model: "dall-e-2", // Usa DALL-E 2 para 512x512, o DALL-E 3 para 1024x1024 o superior
+      prompt: prompt,
+      n: 1, 
+      size: "512x512",
+      response_format: 'url'
+    });
+
+    // Devuelve la URL de la imagen.
+    // Usamos .data[0].url porque la respuesta de DALL-E es un array de URLs.
+    res.json(response.data[0].url); 
+  } catch (error) {
+    console.error("❌ Error al contactar DALL-E:", error);
+    res.status(500).json({ error: error.message || "Error interno del servidor" });
+  }
+});
 // ChatGPT endpoint
 app.post("/", async (req, res) => {
   const { prompt } = req.body;
